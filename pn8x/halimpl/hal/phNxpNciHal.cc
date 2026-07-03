@@ -178,6 +178,11 @@ static void* phNxpNciHal_client_thread(void* arg) {
     /* Fetch next message from the NFC stack message queue */
     if (phDal4Nfc_msgrcv(p_nxpncihal_ctrl->gDrvCfg.nClientId, &msg, 0, 0) ==
         -1) {
+      if (p_nxpncihal_ctrl->thread_running == 0 ||
+          p_nxpncihal_ctrl->gDrvCfg.nClientId == 0) {
+        NXPLOG_NCIHAL_E("NFC client thread terminating");
+        break;
+      }
       NXPLOG_NCIHAL_E("NFC client received bad message");
       continue;
     }
