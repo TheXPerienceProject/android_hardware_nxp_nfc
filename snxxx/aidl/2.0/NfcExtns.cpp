@@ -89,7 +89,7 @@ void NfcExtns::getConfig(NfcConfig& config) {
   }
   if ((GetNxpByteArrayValue(NAME_NFA_PROPRIETARY_CFG, (char*)buffer.data(),
                             buffer.size(), &retlen)) &&
-      (retlen == 10)) {
+      (retlen == 9 || retlen == 10)) {
     config.nfaProprietaryCfg.protocol18092Active = (uint8_t)buffer[0];
     config.nfaProprietaryCfg.protocolBPrime = (uint8_t)buffer[1];
     config.nfaProprietaryCfg.protocolDual = (uint8_t)buffer[2];
@@ -99,7 +99,8 @@ void NfcExtns::getConfig(NfcConfig& config) {
     config.nfaProprietaryCfg.discoveryPollKovio = (uint8_t)buffer[6];
     config.nfaProprietaryCfg.discoveryPollBPrime = (uint8_t)buffer[7];
     config.nfaProprietaryCfg.discoveryListenBPrime = (uint8_t)buffer[8];
-    config.nfaProprietaryCfg.protocolChineseId = (uint8_t)buffer[9];
+    config.nfaProprietaryCfg.protocolChineseId =
+        (retlen == 10) ? (uint8_t)buffer[9] : 0xFF;
   } else {
     memset(&config.nfaProprietaryCfg, 0xFF, sizeof(ProtocolDiscoveryConfig));
   }
